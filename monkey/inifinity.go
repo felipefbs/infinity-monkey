@@ -5,28 +5,24 @@ import (
 	"math/big"
 )
 
-var alphabet = []string{
-	"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-	"n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-}
+func CharacterPicker() string {
+	x, _ := rand.Int(rand.Reader, big.NewInt(int64(94)))
+	x = x.Add(x, big.NewInt(int64(32)))
 
-func LetterPicker() string {
-	x, _ := rand.Int(rand.Reader, big.NewInt(int64(len(alphabet))))
-	return alphabet[x.Uint64()]
+	return string(rune(uint32(x.Uint64())))
 }
 
 func TrueInfinityMonkey(word string) string {
 	i := 0
 	found := ""
 	for {
-		// time.Sleep(1 / 2 * time.Second)
-		letter := LetterPicker()
+		letter := CharacterPicker()
 		if i == len(word) {
 			break
 		}
-		letraDaVez := word[i]
-		if string(letraDaVez) == letter {
-			found += string(letraDaVez)
+		currentLetter := word[i]
+		if string(currentLetter) == letter {
+			found += string(currentLetter)
 			i++
 		} else {
 			found = ""
@@ -44,14 +40,13 @@ func EasyInfinityMonkey(word string) string {
 	i := 0
 	found := ""
 	for {
-		// time.Sleep(1 / 2 * time.Second)
-		letter := LetterPicker()
+		letter := CharacterPicker()
 		if i == len(word) {
 			break
 		}
-		letraDaVez := word[i]
-		if string(letraDaVez) == letter {
-			found += string(letraDaVez)
+		currentLetter := word[i]
+		if string(currentLetter) == letter {
+			found += string(currentLetter)
 			i++
 		}
 
