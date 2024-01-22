@@ -6,7 +6,7 @@ import (
 )
 
 func CharacterPicker() string {
-	x, _ := rand.Int(rand.Reader, big.NewInt(int64(94)))
+	x, _ := rand.Int(rand.Reader, big.NewInt(int64(5011)))
 	x = x.Add(x, big.NewInt(int64(32)))
 
 	return string(rune(uint32(x.Uint64())))
