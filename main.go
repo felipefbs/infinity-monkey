@@ -11,24 +11,29 @@ import (
 	"github.com/felipefbs/infinity-monkey/pubsub"
 )
 
-func main() {
-	inc := pubsub.NewInc()
-	monkeyNumber := 10000
+const monkeyNumber = 10000
 
+func main() {
+	// Reading text from file
 	textByte, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	text := strings.ReplaceAll(string(textByte), "\n", "")
 
+	text := strings.ReplaceAll(string(textByte), "\n", "")
 	wordList := strings.Split(text, " ")
 
-	returnChan := inc.Subscribe("return", len(wordList))
-	receiveChan := inc.Subscribe("book", len(wordList))
+	// Creating pubsub topics and monkeys to find the words
+	inc := pubsub.NewInc()
+	returnChan := inc.Subscribe("return", 1)
+	receiveChan := inc.Subscribe("words", 1)
 	for i := 0; i < monkeyNumber; i++ {
 		go Monkey(inc, i, receiveChan)
 	}
 
+	defer inc.Close()
+
+	// Publishing all the words from text on the topic "words"
 	found := make([]pubsub.Token, len(wordList))
 
 	for index, word := range wordList {
@@ -38,18 +43,19 @@ func main() {
 			Found: false,
 		}
 		found[index] = token
-		inc.Publish("book", token)
+		inc.Publish("words", token)
 	}
 
+	// This anonm function is responsible to read all the found words
 	go func() {
 		for f := range returnChan {
 			found[f.Index] = f
 		}
 	}()
 
+	// The main loop where checks if all words were found or print how many are found already
 	countFoundChan := make(chan int)
 	go CountFound(&found, countFoundChan)
-
 	aux := 0
 	for {
 		aux = <-countFoundChan
