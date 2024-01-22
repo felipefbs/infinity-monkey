@@ -9,11 +9,11 @@ import (
 
 func BenchmarkLetterPicker(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		monkey.LetterPicker()
+		monkey.CharacterPicker()
 	}
 }
 
-var table = []string{"a", "aa" /*"aaa", "aaaa", "aaaaa"*/}
+var table = []string{ /*"a", "aa" "aaa", "aaaa", "aaaaa"*/ }
 
 func BenchmarkEasy(b *testing.B) {
 	for _, v := range table {
